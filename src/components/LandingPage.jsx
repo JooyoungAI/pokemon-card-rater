@@ -1,15 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCards } from '../hooks/useCards';
 import { Star, Swords } from 'lucide-react';
 
 export default function LandingPage() {
-  const { cardList, loading } = useCards();
+  const { cardList, rareCardList, loading } = useCards();
+  const [displayCards, setDisplayCards] = useState([]);
+
+  useEffect(() => {
+    if (cardList.length > 0 && rareCardList.length > 0) {
+      // 45 normal cards + 155 rare cards to make 200
+      const standard = cardList.slice(0, 45);
+      const rare = rareCardList.slice(0, 155);
+      const combined = [...standard, ...rare];
+      
+      // Shuffle array so it's a random mix & starting point each time
+      for (let i = combined.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [combined[i], combined[j]] = [combined[j], combined[i]];
+      }
+      
+      setDisplayCards(combined);
+    }
+  }, [cardList, rareCardList]);
 
   const RowCards = ({ cards, reverse }) => {
     if (!cards || cards.length === 0) return null;
     return (
-      <div className={`flex w-max gap-4 py-2 ${reverse ? 'animate-scroll-right' : 'animate-scroll-left'}`}>
+      <div className={`flex w-max gap-4 py-2 hover:[animation-play-state:paused] ${reverse ? 'animate-scroll-right' : 'animate-scroll-left'}`}>
         {[...cards, ...cards].map((c, i) => (
           <img 
             key={`${c.id}-${i}`} 
@@ -27,11 +45,11 @@ export default function LandingPage() {
     <div className="relative w-full min-h-[75vh] flex flex-col items-center justify-center overflow-hidden rounded-3xl border border-white/5 bg-pokemon-dark/30">
       {/* Background Marquee Walls */}
       <div className="absolute inset-0 z-0 flex flex-col justify-center gap-4 opacity-40 pointer-events-none transform -rotate-6 scale-125">
-        {!loading && cardList.length > 30 ? (
+        {!loading && displayCards.length > 50 ? (
           <>
-            <RowCards cards={cardList.slice(0, 15)} />
-            <RowCards cards={cardList.slice(15, 30)} reverse />
-            <RowCards cards={cardList.slice(30, 45)} />
+            <RowCards cards={displayCards.slice(0, Math.floor(displayCards.length / 3))} />
+            <RowCards cards={displayCards.slice(Math.floor(displayCards.length / 3), Math.floor(displayCards.length / 3) * 2)} reverse />
+            <RowCards cards={displayCards.slice(Math.floor(displayCards.length / 3) * 2)} />
           </>
         ) : (
           <div className="w-full h-full flex items-center justify-center">
