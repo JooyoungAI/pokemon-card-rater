@@ -37,11 +37,11 @@ function App() {
       <nav className="fixed top-0 w-full z-50 glass-panel border-b border-white/10 px-6 py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-pokemon-red to-pokemon-gold flex items-center justify-center shadow-[0_0_20px_rgba(238,21,21,0.4)]">
-              <span className="font-black text-xl text-white tracking-tighter">PR</span>
+            <div className="w-10 h-10 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(238,21,21,0.4)] overflow-hidden border border-white/20">
+              <img src="https://assets.tcgdex.net/en/me/me02.5/276/high.webp" alt="Pikachu SIR Logo" className="w-full h-full object-cover object-[center_20%]" />
             </div>
             <h1 className="text-xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent hidden md:block">
-              PokéRater
+              Pokémon Card Rater
             </h1>
           </div>
           
