@@ -3,9 +3,10 @@ import { useCards } from '../hooks/useCards';
 import { supabase } from '../lib/supabase';
 import { calculateElo } from '../utils/elo';
 import { ArrowLeft } from 'lucide-react';
+import SetSelector from './SetSelector';
 
 export default function PitSection() {
-  const { cardList, rareCardList, loading: loadingList, getNewRandomCard } = useCards();
+  const { cardList, rareCardList, loading: loadingList, getNewRandomCard, loadCustomSets, customLoading } = useCards();
   const [mode, setMode] = useState(null);
   const [cardA, setCardA] = useState(null);
   const [cardB, setCardB] = useState(null);
@@ -19,9 +20,11 @@ export default function PitSection() {
     let c1 = await getNewRandomCard(currentMode);
     let c2 = await getNewRandomCard(currentMode);
     
-    // Ensure they are not the same
-    while (c1 && c2 && c1.id === c2.id) {
-       c2 = await getNewRandomCard(currentMode);
+    // Ensure they are not the same, gracefully degrade if pool is tiny
+    let attempts = 0;
+    while (c1 && c2 && c1.id === c2.id && attempts < 10) {
+       c2 = await getNewRandomCard(attempts > 5 ? 'all' : currentMode);
+       attempts++;
     }
     
     setCardA(c1);
@@ -33,6 +36,12 @@ export default function PitSection() {
   const selectMode = (selectedMode) => {
     setMode(selectedMode);
     loadMatchup(selectedMode);
+  };
+
+  const handleCustomSetsConfirmed = async (setIds) => {
+    await loadCustomSets(setIds);
+    setMode('sets');
+    loadMatchup('sets');
   };
 
   const handleVote = async (winner) => {
@@ -79,6 +88,10 @@ export default function PitSection() {
     loadMatchup(mode);
   };
 
+  if (mode === 'selecting-sets') {
+    return <SetSelector onConfirm={handleCustomSetsConfirmed} onCancel={() => setMode(null)} />;
+  }
+
   if (!mode) {
     return (
       <div className="flex flex-col items-center justify-center w-full min-h-[60vh] gap-8">
@@ -87,7 +100,7 @@ export default function PitSection() {
           <p className="text-gray-400">Choose which types of cards will battle!</p>
         </div>
         
-        <div className="flex flex-col sm:flex-row gap-6 lg:gap-12">
+        <div className="flex flex-col md:flex-row gap-6 lg:gap-8 justify-center flex-wrap">
           <button 
             onClick={() => selectMode('all')}
             disabled={loadingList}
@@ -100,6 +113,20 @@ export default function PitSection() {
             <h3 className="text-2xl font-bold text-white relative z-10">All Cards</h3>
             <p className="text-gray-400 text-sm text-center px-6 relative z-10">Pit any Pokémon from the entire TCG history against each other.</p>
             {loadingList && <span className="text-pokemon-blue text-xs font-bold animate-pulse mt-2">Loading...</span>}
+          </button>
+
+          <button 
+            onClick={() => setMode('selecting-sets')}
+            disabled={loadingList}
+            className={`glass-panel group relative w-64 h-80 rounded-2xl flex flex-col items-center justify-center gap-4 transition-all duration-300 hover:scale-105 border-2 border-transparent hover:border-purple-400 shadow-[0_0_20px_rgba(168,85,247,0.1)] hover:shadow-[0_0_30px_rgba(168,85,247,0.4)] ${loadingList ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            <div className="absolute inset-0 bg-gradient-to-b from-purple-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
+            <div className="w-20 h-20 rounded-full bg-purple-400/20 flex items-center justify-center text-4xl group-hover:scale-110 group-hover:bg-purple-400/30 transition-all drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]">
+              🗂️
+            </div>
+            <h3 className="text-2xl font-bold text-white relative z-10">Selected Sets</h3>
+            <p className="text-gray-400 text-sm text-center px-6 relative z-10">Handpick exactly which expansions you want to vote on.</p>
+            {loadingList && <span className="text-purple-400 text-xs font-bold animate-pulse mt-2">Loading...</span>}
           </button>
 
           <button 
@@ -120,7 +147,7 @@ export default function PitSection() {
     );
   }
 
-  const isLoading = loadingList || loadingCards || !cardA || !cardB;
+  const isLoading = loadingList || loadingCards || customLoading || !cardA || !cardB;
 
   return (
     <div className="flex flex-col items-center justify-center w-full min-h-[60vh] gap-8 relative">

@@ -49,6 +49,48 @@ export async function fetchRareCards() {
 }
 
 /**
+ * Fetches all available sets from TCGdex.
+ */
+export async function fetchSets() {
+  try {
+    const res = await fetch(`${API_BASE}/sets`);
+    if (!res.ok) throw new Error('Failed to fetch sets');
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching sets:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetches cards strictly from the given array of set IDs.
+ */
+export async function fetchCardsBySets(setIds) {
+  if (!setIds || setIds.length === 0) return [];
+  try {
+    const fetches = setIds.map(setId => 
+      fetch(`${API_BASE}/sets/${setId}`).then(r => r.ok ? r.json() : null)
+    );
+    
+    const results = await Promise.all(fetches);
+    
+    // Each set response has a 'cards' array
+    const combinedCards = results
+      .filter(setInfo => setInfo && setInfo.cards)
+      .flatMap(setInfo => setInfo.cards);
+      
+    // Deduplicate just in case
+    const uniqueCards = Array.from(new Map(combinedCards.map(c => [c.id, c])).values());
+    
+    return uniqueCards;
+  } catch (error) {
+    console.error('Error fetching cards by sets:', error);
+    return [];
+  }
+}
+
+/**
  * Fetches detailed info about a specific card (including high res image URLs).
  */
 export async function getCardDetails(id) {
