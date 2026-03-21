@@ -62,11 +62,11 @@ export default function LandingPage() {
       </div>
 
       {/* Hero Content */}
-      <div className="relative z-10 glass-panel p-8 md:p-12 rounded-3xl max-w-2xl w-full text-center shadow-[0_0_50px_rgba(0,0,0,0.8)] border-white/20 backdrop-blur-xl">
-        <h1 className="text-5xl md:text-7xl font-extrabold mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent drop-shadow-lg">
+      <div className="relative z-10 bg-pokemon-darker/40 backdrop-blur-sm p-6 md:p-8 rounded-3xl max-w-xl w-[90%] text-center shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-3 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent drop-shadow-lg leading-tight lg:leading-tight">
           Pokémon Card Rater
         </h1>
-        <p className="text-lg md:text-xl text-gray-300 mb-10 font-medium">
+        <p className="text-base md:text-lg text-gray-300 mb-8 font-medium px-4">
           The ultimate FaceMash-style ranking platform for Pokémon TCG.
         </p>
 

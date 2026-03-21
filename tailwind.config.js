@@ -19,8 +19,8 @@ export default {
         sans: ['Inter', 'sans-serif']
       },
       animation: {
-        'scroll-left': 'scroll-left 120s linear infinite',
-        'scroll-right': 'scroll-right 120s linear infinite',
+        'scroll-left': 'scroll-left 300s linear infinite',
+        'scroll-right': 'scroll-right 300s linear infinite',
       },
       keyframes: {
         'scroll-left': {
