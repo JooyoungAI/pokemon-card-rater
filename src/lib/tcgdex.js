@@ -21,12 +21,10 @@ export async function fetchAllCards() {
  */
 export async function fetchRareCards() {
   const targetRarities = [
-    'Double rare',
-    'Ultra Rare',
     'Illustration rare',
     'Special illustration rare',
-    'Hyper rare',
-    'Secret Rare'
+    'Secret Rare',
+    'Rare Secret'
   ];
 
   try {
