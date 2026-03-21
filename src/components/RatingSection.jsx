@@ -11,10 +11,10 @@ export default function RatingSection() {
   const [loadingCard, setLoadingCard] = useState(false);
   const [hasRated, setHasRated] = useState(false);
 
-  const loadNextCard = async (currentMode) => {
+  const loadNextCard = async (currentMode, overridePool = null) => {
     setLoadingCard(true);
     setHasRated(false);
-    const card = await getNewRandomCard(currentMode);
+    const card = await getNewRandomCard(currentMode, overridePool);
     setCurrentCard(card);
     setLoadingCard(false);
   };
@@ -25,9 +25,9 @@ export default function RatingSection() {
   };
 
   const handleCustomSetsConfirmed = async (setIds) => {
-    await loadCustomSets(setIds);
+    const newList = await loadCustomSets(setIds);
     setMode('sets');
-    loadNextCard('sets');
+    loadNextCard('sets', newList);
   };
 
   const handleRate = async (score) => {

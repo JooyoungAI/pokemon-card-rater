@@ -13,17 +13,17 @@ export default function PitSection() {
   const [loadingCards, setLoadingCards] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const loadMatchup = async (currentMode) => {
+  const loadMatchup = async (currentMode, overridePool = null) => {
     setLoadingCards(true);
     
     // Fetch two different cards
-    let c1 = await getNewRandomCard(currentMode);
-    let c2 = await getNewRandomCard(currentMode);
+    let c1 = await getNewRandomCard(currentMode, overridePool);
+    let c2 = await getNewRandomCard(currentMode, overridePool);
     
     // Ensure they are not the same, gracefully degrade if pool is tiny
     let attempts = 0;
     while (c1 && c2 && c1.id === c2.id && attempts < 10) {
-       c2 = await getNewRandomCard(attempts > 5 ? 'all' : currentMode);
+       c2 = await getNewRandomCard(attempts > 5 ? 'all' : currentMode, overridePool);
        attempts++;
     }
     
@@ -39,9 +39,9 @@ export default function PitSection() {
   };
 
   const handleCustomSetsConfirmed = async (setIds) => {
-    await loadCustomSets(setIds);
+    const newList = await loadCustomSets(setIds);
     setMode('sets');
-    loadMatchup('sets');
+    loadMatchup('sets', newList);
   };
 
   const handleVote = async (winner) => {

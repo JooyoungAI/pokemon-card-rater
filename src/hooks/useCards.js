@@ -63,10 +63,13 @@ export function useCards() {
     }
   };
 
-  const getNewRandomCard = async (mode = 'all') => {
-    let activeList = cardList;
-    if (mode === 'rare') activeList = rareCardList;
-    if (mode === 'sets') activeList = customCardList;
+  const getNewRandomCard = async (mode = 'all', overridePool = null) => {
+    let activeList = overridePool;
+    if (!activeList) {
+       activeList = cardList;
+       if (mode === 'rare') activeList = rareCardList;
+       if (mode === 'sets') activeList = customCardList;
+    }
 
     if (!activeList || activeList.length === 0) {
        activeList = cardList; // fallback
