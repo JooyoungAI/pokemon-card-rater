@@ -47,7 +47,7 @@ function App() {
           
           <div className="flex gap-2">
             <NavLink to="/" icon={Star} label="Rate" isActive={location.pathname === '/'} />
-            <NavLink to="/pit" icon={Swords} label="The Pit" isActive={location.pathname === '/pit'} />
+            <NavLink to="/pit" icon={Swords} label="Versus Mode" isActive={location.pathname === '/pit'} />
             <NavLink to="/leaderboard" icon={Trophy} label="Top Cards" isActive={location.pathname === '/leaderboard'} />
           </div>
         </div>
