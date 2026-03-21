@@ -183,6 +183,16 @@ export default function PitSection() {
         )}
 
       </div>
+
+      {!isLoading && (
+        <button 
+          onClick={() => loadMatchup(mode)}
+          disabled={isProcessing || isLoading}
+          className="mt-4 px-6 py-2 rounded-full text-sm border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+        >
+          Skip this matchup
+        </button>
+      )}
     </div>
   );
 }

@@ -165,6 +165,16 @@ export default function RatingSection() {
           </button>
         ))}
       </div>
+
+      {!isLoading && (
+        <button 
+          onClick={() => loadNextCard(mode)}
+          disabled={hasRated || isLoading}
+          className="mt-2 px-6 py-2 rounded-full text-sm border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+        >
+          Skip this card
+        </button>
+      )}
     </div>
   );
 }
