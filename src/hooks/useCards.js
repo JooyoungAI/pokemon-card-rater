@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { fetchAllCards, getRandomCard, getCardDetails } from '../lib/tcgdex';
+import { fetchAllCards, fetchRareCards, getRandomCard, getCardDetails } from '../lib/tcgdex';
 
 export function useCards() {
   const [cardList, setCardList] = useState([]);
+  const [rareCardList, setRareCardList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -11,16 +12,30 @@ export function useCards() {
       setLoading(true);
       try {
         const cachedList = localStorage.getItem('tcgCardList');
+        const cachedRareList = localStorage.getItem('tcgRareCardList');
+        
+        // Load standard cards
         let list = [];
         if (cachedList) {
           list = JSON.parse(cachedList);
         } else {
           list = await fetchAllCards();
-          // Filter out cards without images early
           list = list.filter(c => c.image);
           localStorage.setItem('tcgCardList', JSON.stringify(list));
         }
         setCardList(list);
+
+        // Load rare cards
+        let rList = [];
+        if (cachedRareList) {
+          rList = JSON.parse(cachedRareList);
+        } else {
+          rList = await fetchRareCards();
+          rList = rList.filter(c => c.image);
+          localStorage.setItem('tcgRareCardList', JSON.stringify(rList));
+        }
+        setRareCardList(rList);
+        
       } catch (err) {
         setError(err.message);
       } finally {
@@ -31,9 +46,11 @@ export function useCards() {
     initCards();
   }, []);
 
-  const getNewRandomCard = async () => {
-    if (cardList.length === 0) return null;
-    const randomCardBase = getRandomCard(cardList);
+  const getNewRandomCard = async (mode = 'all') => {
+    const activeList = mode === 'rare' ? rareCardList : cardList;
+    if (activeList.length === 0) return null;
+    
+    const randomCardBase = getRandomCard(activeList);
     if (!randomCardBase) return null;
     
     // Fetch full details to get the high-res image
@@ -41,5 +58,5 @@ export function useCards() {
     return fullDetails;
   };
 
-  return { cardList, loading, error, getNewRandomCard };
+  return { cardList, rareCardList, loading, error, getNewRandomCard };
 }

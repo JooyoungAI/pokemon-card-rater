@@ -17,6 +17,40 @@ export async function fetchAllCards() {
 }
 
 /**
+ * Fetches cards strictly matching high-tier rarities to compose a 'Rare Cards' list
+ */
+export async function fetchRareCards() {
+  const targetRarities = [
+    'Double rare',
+    'Ultra Rare',
+    'Illustration rare',
+    'Special illustration rare',
+    'Hyper rare',
+    'Secret Rare'
+  ];
+
+  try {
+    // Fetch all requested rarities in parallel
+    const fetches = targetRarities.map(rarity => 
+      fetch(`${API_BASE}/cards?rarity=${encodeURIComponent(rarity)}`).then(r => r.ok ? r.json() : [])
+    );
+    
+    const results = await Promise.all(fetches);
+    
+    // Flatten the results into a single array
+    const combinedCards = results.flat();
+    
+    // Remove potential duplicates by id
+    const uniqueCards = Array.from(new Map(combinedCards.map(c => [c.id, c])).values());
+    
+    return uniqueCards;
+  } catch (error) {
+    console.error('Error fetching rare cards:', error);
+    return [];
+  }
+}
+
+/**
  * Fetches detailed info about a specific card (including high res image URLs).
  */
 export async function getCardDetails(id) {
