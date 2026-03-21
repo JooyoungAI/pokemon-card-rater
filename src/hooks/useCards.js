@@ -11,8 +11,8 @@ export function useCards() {
     async function initCards() {
       setLoading(true);
       try {
-        const cachedList = localStorage.getItem('tcgCardList');
-        const cachedRareList = localStorage.getItem('tcgRareCardList');
+        const cachedList = localStorage.getItem('tcgCardList_v2');
+        const cachedRareList = localStorage.getItem('tcgRareCardList_v2');
         
         // Load standard cards
         let list = [];
@@ -21,7 +21,7 @@ export function useCards() {
         } else {
           list = await fetchAllCards();
           list = list.filter(c => c.image);
-          localStorage.setItem('tcgCardList', JSON.stringify(list));
+          localStorage.setItem('tcgCardList_v2', JSON.stringify(list));
         }
         setCardList(list);
 
@@ -32,7 +32,7 @@ export function useCards() {
         } else {
           rList = await fetchRareCards();
           rList = rList.filter(c => c.image);
-          localStorage.setItem('tcgRareCardList', JSON.stringify(rList));
+          localStorage.setItem('tcgRareCardList_v2', JSON.stringify(rList));
         }
         setRareCardList(rList);
         

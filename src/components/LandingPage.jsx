@@ -9,9 +9,9 @@ export default function LandingPage() {
 
   useEffect(() => {
     if (cardList.length > 0 && rareCardList.length > 0) {
-      // 45 normal cards + 155 rare cards to make 200
-      const standard = cardList.slice(0, 45);
-      const rare = rareCardList.slice(0, 155);
+      // 150 normal cards + 150 rare cards to make 300
+      const standard = cardList.slice(0, 150);
+      const rare = rareCardList.slice(0, 150);
       const combined = [...standard, ...rare];
       
       // Shuffle array so it's a random mix & starting point each time
@@ -44,12 +44,12 @@ export default function LandingPage() {
   return (
     <div className="relative w-full min-h-[75vh] flex flex-col items-center justify-center overflow-hidden rounded-3xl border border-white/5 bg-pokemon-dark/30">
       {/* Background Marquee Walls */}
-      <div className="absolute inset-0 z-0 flex flex-col justify-center gap-4 opacity-40 pointer-events-none transform -rotate-6 scale-125">
-        {!loading && displayCards.length > 50 ? (
+      <div className="absolute inset-0 z-0 flex flex-col justify-center gap-4 opacity-30 pointer-events-none transform -rotate-6 scale-125">
+        {!loading && displayCards.length > 200 ? (
           <>
-            <RowCards cards={displayCards.slice(0, Math.floor(displayCards.length / 3))} />
-            <RowCards cards={displayCards.slice(Math.floor(displayCards.length / 3), Math.floor(displayCards.length / 3) * 2)} reverse />
-            <RowCards cards={displayCards.slice(Math.floor(displayCards.length / 3) * 2)} />
+            <RowCards cards={displayCards.slice(0, 100)} />
+            <RowCards cards={displayCards.slice(100, 200)} reverse />
+            <RowCards cards={displayCards.slice(200, 300)} />
           </>
         ) : (
           <div className="w-full h-full flex items-center justify-center">
