@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { fetchAllCards, fetchRareCards, getRandomCard, getCardDetails } from '../lib/tcgdex';
+import { fetchAllCards, fetchRareCards, fetchCardsBySets, getRandomCard, getCardDetails } from '../lib/tcgdex';
 
 export function useCards() {
   const [cardList, setCardList] = useState([]);
   const [rareCardList, setRareCardList] = useState([]);
+  const [customCardList, setCustomCardList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [customLoading, setCustomLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -46,17 +48,45 @@ export function useCards() {
     initCards();
   }, []);
 
-  const getNewRandomCard = async (mode = 'all') => {
-    const activeList = mode === 'rare' ? rareCardList : cardList;
-    if (activeList.length === 0) return null;
-    
-    const randomCardBase = getRandomCard(activeList);
-    if (!randomCardBase) return null;
-    
-    // Fetch full details to get the high-res image
-    const fullDetails = await getCardDetails(randomCardBase.id);
-    return fullDetails;
+  const loadCustomSets = async (setIds) => {
+    setCustomLoading(true);
+    try {
+       let cList = await fetchCardsBySets(setIds);
+       cList = cList.filter(c => c.image);
+       setCustomCardList(cList);
+       return cList;
+    } catch(err) {
+       console.error("Error loading custom sets:", err);
+       return [];
+    } finally {
+       setCustomLoading(false);
+    }
   };
 
-  return { cardList, rareCardList, loading, error, getNewRandomCard };
+  const getNewRandomCard = async (mode = 'all') => {
+    let activeList = cardList;
+    if (mode === 'rare') activeList = rareCardList;
+    if (mode === 'sets') activeList = customCardList;
+
+    if (!activeList || activeList.length === 0) {
+       activeList = cardList; // fallback
+    }
+
+    let validCard = null;
+    let attempts = 0;
+    
+    while (!validCard && attempts < 5) {
+      const randomCardBase = getRandomCard(activeList);
+      if (!randomCardBase) break;
+      
+      const fullDetails = await getCardDetails(randomCardBase.id);
+      if (fullDetails && fullDetails.image) {
+        validCard = fullDetails;
+      }
+      attempts++;
+    }
+    return validCard;
+  };
+
+  return { cardList, rareCardList, customCardList, loading, customLoading, error, getNewRandomCard, loadCustomSets };
 }
