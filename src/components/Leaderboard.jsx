@@ -63,7 +63,7 @@ export default function Leaderboard() {
     const getScoreColor = () => type === 'rating' ? 'text-pokemon-gold' : 'text-pokemon-red';
 
     return (
-      <div className="flex items-end justify-center gap-2 sm:gap-4 mt-6 mb-8 px-2">
+      <div className="flex items-end justify-center gap-2 sm:gap-4 mt-0 mb-6 px-2">
         {/* 2nd Place - Silver */}
         <div className="flex flex-col items-center w-1/3 max-w-[120px] animate-fade-in-up" style={{ animationDelay: '200ms' }}>
           <div className="text-xl font-bold text-gray-300 mb-2">2nd</div>
