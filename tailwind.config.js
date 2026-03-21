@@ -17,6 +17,20 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif']
+      },
+      animation: {
+        'scroll-left': 'scroll-left 40s linear infinite',
+        'scroll-right': 'scroll-right 40s linear infinite',
+      },
+      keyframes: {
+        'scroll-left': {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(calc(-50% - 1rem))' },
+        },
+        'scroll-right': {
+          '0%': { transform: 'translateX(calc(-50% - 1rem))' },
+          '100%': { transform: 'translateX(0)' },
+        }
       }
     }
   },

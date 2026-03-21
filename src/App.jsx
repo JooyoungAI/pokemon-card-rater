@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Star, Swords, Trophy } from 'lucide-react';
+import { Star, Swords, Trophy, Home } from 'lucide-react';
+import LandingPage from './components/LandingPage';
 import RatingSection from './components/RatingSection';
 import PitSection from './components/PitSection';
 import Leaderboard from './components/Leaderboard';
@@ -36,18 +37,19 @@ function App() {
       {/* Navbar */}
       <nav className="fixed top-0 w-full z-50 glass-panel border-b border-white/10 px-6 py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <Link to="/" className="flex items-center gap-3 hover:scale-105 transition-transform">
             <div className="w-10 h-10 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(238,21,21,0.4)] overflow-hidden border border-white/20">
               <img src="https://assets.tcgdex.net/en/me/me02.5/276/high.webp" alt="Pikachu SIR Logo" className="w-full h-full object-cover object-[center_20%]" />
             </div>
             <h1 className="text-xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent hidden md:block">
               Pokémon Card Rater
             </h1>
-          </div>
+          </Link>
           
           <div className="flex gap-2">
-            <NavLink to="/" icon={Star} label="Rate" isActive={location.pathname === '/'} />
-            <NavLink to="/pit" icon={Swords} label="Versus Mode" isActive={location.pathname === '/pit'} />
+            <NavLink to="/" icon={Home} label="Home" isActive={location.pathname === '/'} />
+            <NavLink to="/rate" icon={Star} label="Rate" isActive={location.pathname === '/rate'} />
+            <NavLink to="/versus" icon={Swords} label="Versus Mode" isActive={location.pathname === '/versus'} />
             <NavLink to="/leaderboard" icon={Trophy} label="Top Cards" isActive={location.pathname === '/leaderboard'} />
           </div>
         </div>
@@ -56,8 +58,9 @@ function App() {
       {/* Main Content Area */}
       <main className="w-full max-w-5xl px-6 pt-28 pb-12 z-10 flex-grow flex flex-col">
         <Routes>
-          <Route path="/" element={<RatingSection />} />
-          <Route path="/pit" element={<PitSection />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/rate" element={<RatingSection />} />
+          <Route path="/versus" element={<PitSection />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
         </Routes>
       </main>
