@@ -18,7 +18,7 @@ export default function Leaderboard() {
           .from('card_ratings')
           .select('*')
           .order('average_score', { ascending: false })
-          .limit(20);
+          .limit(60);
           
         if (ratedErr) throw ratedErr;
 
@@ -27,7 +27,7 @@ export default function Leaderboard() {
           .from('card_elo')
           .select('*')
           .order('elo_score', { ascending: false })
-          .limit(20);
+          .limit(60);
           
         if (eloErr) throw eloErr;
 
@@ -44,9 +44,9 @@ export default function Leaderboard() {
         const ratedWithDetails = await hydrateCards(ratedData);
         const eloWithDetails = await hydrateCards(eloData);
 
-        // Slice up to exactly 10 cards, buffering against any dropped or test cards
-        setTopRated(ratedWithDetails.slice(0, 10));
-        setTopElo(eloWithDetails.slice(0, 10));
+        // Slice up to exactly 50 cards, buffering against any dropped or test cards
+        setTopRated(ratedWithDetails.slice(0, 50));
+        setTopElo(eloWithDetails.slice(0, 50));
       } catch (err) {
         console.error("Error fetching leaderboards:", err);
       } finally {
