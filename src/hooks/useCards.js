@@ -13,6 +13,13 @@ export function useCards() {
     async function initCards() {
       setLoading(true);
       try {
+        // Clear all older versions of cache to strictly enforce maximum 5MB browser Quota limit
+        Object.keys(localStorage).forEach(key => {
+           if (key.startsWith('tcg') && !key.endsWith('_v3')) {
+              localStorage.removeItem(key);
+           }
+        });
+
         const cachedList = localStorage.getItem('tcgCardList_v3');
         const cachedRareList = localStorage.getItem('tcgRareCardList_v3');
         
