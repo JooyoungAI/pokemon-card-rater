@@ -24,7 +24,8 @@ export async function fetchRareCards() {
     'Illustration rare',
     'Special illustration rare',
     'Secret Rare',
-    'Rare Secret'
+    'Rare Secret',
+    'Ultra Rare'
   ];
 
   try {
